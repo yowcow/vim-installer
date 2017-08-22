@@ -1,19 +1,21 @@
-UNAME := $(shell uname -s)
+VIMVERNS := github.com/yowcow/vim-ver
+LATEST = .latest
+BUILD = _build
 
-ifeq ($(UNAME),Linux)
-    VERSION ?= $(shell ./bin/vim-version-linux)
-endif
-ifeq ($(UNAME),Darwin)
-    VERSION ?= $(shell ./bin/vim-version-darwin)
-endif
-
+VERSION ?= $(shell cat .latest)
 ARCHIVE = v$(VERSION).tar.gz
 UNARCHIVED = vim-$(VERSION)
-PREFIX = /usr/local/$(UNARCHIVED)
+PREFIX ?= /usr/local/$(UNARCHIVED)
 
-.PHONY: all install current
+.PHONY: all build install current clean
 
-all: $(UNARCHIVED)
+all: $(LATEST)
+
+$(LATEST):
+	which vim-ver || go get -v $(VIMVERNS) && go install -v $(VIMVERNS)
+	vim-ver latest > $@
+
+build: $(BUILD)
 	cd $< && \
 		./configure \
 			--prefix=$(PREFIX) \
@@ -24,16 +26,22 @@ all: $(UNARCHIVED)
 			--with-lua-prefix=/usr/local && \
 		make
 
+$(BUILD): src/$(ARCHIVE)
+	mkdir -p $@
+	tar xzf $< -C $@ --strip-components=1
+
+src/$(ARCHIVE): src
+	curl -L https://github.com/vim/vim/archive/$(ARCHIVE) -o $@
+
+src:
+	mkdir -p $@
+
 install:
-	cd $(UNARCHIVED) && \
-		make install
+	cd $(BUILD) && make install
 
 current:
 	-rm /usr/local/vim
 	ln -s $(PREFIX) /usr/local/vim
 
-$(ARCHIVE):
-	curl -LO https://github.com/vim/vim/archive/$(ARCHIVE)
-
-$(UNARCHIVED): $(ARCHIVE)
-	tar xzf $<
+clean:
+	rm -rf $(BUILD)

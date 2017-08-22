@@ -11,11 +11,17 @@ Clone this repository into somewhere.
 To install the latest vim, do:
 
 ```
-make && sudo make install
+make && make build && sudo make install
 ```
 
 To make the latest vim a current version, do:
 
 ```
 sudo make current
+```
+
+To clean up the previous build, do:
+
+```
+make clean
 ```
