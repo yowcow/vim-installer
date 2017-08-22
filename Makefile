@@ -12,7 +12,7 @@ PREFIX ?= /usr/local/$(UNARCHIVED)
 all: $(LATEST)
 
 $(LATEST):
-	which vim-ver || go install $(VIMVERNS)
+	which vim-ver || go get -v $(VIMVERNS) && go install -v $(VIMVERNS)
 	vim-ver latest > $@
 
 build: $(BUILD)
