@@ -36,12 +36,14 @@ src/$(ARCHIVE): src
 src:
 	mkdir -p $@
 
-install:
+install: $(PREFIX)
+
+$(PREFIX):
 	cd $(BUILD) && make install
 
-current:
+current: $(PREFIX)
 	-rm /usr/local/vim
 	ln -s $(PREFIX) /usr/local/vim
 
 clean:
-	rm -rf $(BUILD)
+	rm -rf $(BUILD) $(LATEST)
