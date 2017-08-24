@@ -1,39 +1,32 @@
-VIMVERNS := github.com/yowcow/vim-ver
-LATEST = .latest
+VIM_VER := github.com/yowcow/vim-ver
+CURRENT_VERSION = .current-version
+SRC = _src
 BUILD = _build
 
-VERSION ?= $(shell cat .latest)
-ARCHIVE = v$(VERSION).tar.gz
-UNARCHIVED = vim-$(VERSION)
-PREFIX ?= /usr/local/$(UNARCHIVED)
+VERSION ?= $(shell cat $(CURRENT_VERSION))
+PREFIX ?= $(shell pwd)/versions/$(VERSION)
 
-.PHONY: all build install current clean
+.PHONY: all build install current clean realclean
 
-all: $(LATEST)
+all: $(CURRENT_VERSION)
 
-$(LATEST):
-	which vim-ver || go get -v $(VIMVERNS) && go install -v $(VIMVERNS)
+$(CURRENT_VERSION):
+	which vim-ver || go get -v $(VIM_VER) && go install -v $(VIM_VER)
 	vim-ver latest > $@
 
 build: $(BUILD)
 	cd $< && \
-		./configure \
-			--prefix=$(PREFIX) \
-			--enable-fail-if-missing \
-			--enable-luainterp \
-			--enable-multibyte \
-			--enable-terminal \
-			--with-lua-prefix=/usr/local && \
+		./configure --prefix=$(PREFIX) $(shell cat configure-options) && \
 		make
 
-$(BUILD): src/$(ARCHIVE)
+$(BUILD): $(SRC)/v$(VERSION).tar.gz
 	mkdir -p $@
 	tar xzf $< -C $@ --strip-components=1
 
-src/$(ARCHIVE): src
-	curl -L https://github.com/vim/vim/archive/$(ARCHIVE) -o $@
+$(SRC)/%.tar.gz: $(SRC)
+	curl -L https://github.com/vim/vim/archive/$(notdir $@) -o $@
 
-src:
+$(SRC):
 	mkdir -p $@
 
 install: $(PREFIX)
@@ -42,8 +35,11 @@ $(PREFIX):
 	cd $(BUILD) && make install
 
 current: $(PREFIX)
-	-rm /usr/local/vim
-	ln -s $(PREFIX) /usr/local/vim
+	rm -f current
+	ln -s $(PREFIX) current
 
 clean:
-	rm -rf $(BUILD) $(LATEST)
+	rm -rf $(BUILD) $(CURRENT_VERSION)
+
+realclean: clean
+	rm -rf $(SRC)

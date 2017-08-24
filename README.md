@@ -8,16 +8,16 @@ HOW TO USE
 
 Clone this repository into somewhere.
 
-To install the latest vim, do:
+To build the latest vim into directory `versions`, do:
 
 ```
-make && make build && sudo make install
+make && make build && make install
 ```
 
-To make the latest vim a current version, do:
+To make a symlink to currently current Vim, do:
 
 ```
-sudo make current
+make current
 ```
 
 To clean up the previous build, do:
@@ -25,3 +25,25 @@ To clean up the previous build, do:
 ```
 make clean
 ```
+
+To clean up downloaded Vim source tarballs, do:
+
+```
+make realclean
+```
+
+MODIFYING CONFIGURE OPTIONS
+---------------------------
+
+Modify options in file `configure-options`.
+
+USING INSTALLED VIM
+-------------------
+
+Add `<path/to/this/repository>/current/bin` to environment variable `$PATH`.
+
+REMOVING OLD VIM VERSIONS
+-------------------------
+
+Clean things in directory `versions`.
+Make sure symlink `current` does not point to deleting directory.
