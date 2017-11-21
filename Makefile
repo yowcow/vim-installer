@@ -13,6 +13,7 @@ all: $(CURRENT_VERSION)
 $(CURRENT_VERSION):
 	which vim-ver || go get -v $(VIM_VER) && go install -v $(VIM_VER)
 	vim-ver HEAD > $@
+	cat $@
 
 build: $(BUILD)
 	cd $< && \
