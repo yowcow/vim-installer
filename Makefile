@@ -1,4 +1,4 @@
-VIM_VER := github.com/yowcow/vim-ver
+VIMVER := github.com/yowcow/vimver
 CURRENT_VERSION = .current-version
 SRC = _src
 BUILD = _build
@@ -11,8 +11,8 @@ PREFIX ?= $(shell pwd)/versions/$(VERSION)
 all: $(CURRENT_VERSION)
 
 $(CURRENT_VERSION):
-	which vim-ver || go get -v $(VIM_VER) && go install -v $(VIM_VER)
-	vim-ver HEAD > $@
+	which vimver || go get -v $(VIMVER)
+	vimver HEAD > $@
 	cat $@
 
 build: $(BUILD)
