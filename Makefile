@@ -21,8 +21,8 @@ $(CONFIGURE_OPTIONS):
 
 build: $(BUILD)
 	cd $< && \
-		./configure --prefix=$(PREFIX) $(shell cat configure-options) && \
-		make
+		./configure --prefix=$(PREFIX) $(shell cat $(CONFIGURE_OPTIONS)) && \
+		$(MAKE)
 
 $(BUILD): $(SRC)/v$(VERSION).tar.gz
 	mkdir -p $@
@@ -37,7 +37,7 @@ $(SRC):
 install: $(PREFIX)
 
 $(PREFIX):
-	cd $(BUILD) && make install
+	cd $(BUILD) && $(MAKE) install
 
 current: $(PREFIX)
 	rm -f current
