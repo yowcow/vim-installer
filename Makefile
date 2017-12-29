@@ -1,5 +1,6 @@
 VIMVER := github.com/yowcow/vimver
 CURRENT_VERSION = .current-version
+CONFIGURE_OPTIONS = configure-options
 SRC = _src
 BUILD = _build
 
@@ -8,12 +9,15 @@ PREFIX ?= $(shell pwd)/versions/$(VERSION)
 
 .PHONY: all build install current clean realclean
 
-all: $(CURRENT_VERSION)
+all: $(CURRENT_VERSION) $(CONFIGURE_OPTIONS)
 
 $(CURRENT_VERSION):
 	which vimver || go get -v $(VIMVER)
 	vimver HEAD > $@
 	cat $@
+
+$(CONFIGURE_OPTIONS):
+	cp $@.default $@
 
 build: $(BUILD)
 	cd $< && \
