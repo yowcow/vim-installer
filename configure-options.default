@@ -1,6 +1,6 @@
 --enable-fail-if-missing
 --enable-luainterp
 --enable-multibyte
---enable-pythoninterp
+--enable-python3interp
 --enable-terminal
 --with-lua-prefix=/usr/local
