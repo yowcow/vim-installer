@@ -1,4 +1,3 @@
-VIMVER := github.com/yowcow/vimver
 CURRENT_VERSION = .current-version
 CONFIGURE_OPTIONS = configure-options
 SRC = _src
@@ -12,8 +11,8 @@ PREFIX ?= $(shell pwd)/versions/$(VERSION)
 all: $(CURRENT_VERSION) $(CONFIGURE_OPTIONS)
 
 $(CURRENT_VERSION):
-	which vimver || go get -v $(VIMVER)
-	vimver HEAD > $@
+	which ghr || go get -v github.com/yowcow/ghr
+	ghr -repo vim/vim HEAD > $@
 	cat $@
 
 $(CONFIGURE_OPTIONS):
